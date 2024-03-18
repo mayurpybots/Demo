@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>One Azimuth Pricing Calculator</title>
+    <style>
+        body {
+            font-size: 24px;
+        }
+        .card {
+    width: 250px;
+    height: 180px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin: 10px auto; /* Set left and right margins to auto */
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+}
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+
+        input[type="number"] {
+            width: 50px;
+        }
+
+        #commercial-equipment label {
+        display: block;
+        text-align: left;
+        }
+
+        #addons {
+        display: block;
+        text-align: left;
+        }
+
+        .flipped-image {
+            transform: scaleX(-1);
+        }
+
+    </style>
+     <link href="https://cdn.jsdelivr.net/npm/intro.js/minified/introjs.min.css" rel="stylesheet">
+</head>
+<body>
+
+    <table>
+        <tr>
+            <td><img src="https://oneazimuth.co.in/images/logo.png" alt="Logo"></td>
+            <td><strong>ONE Azimuth</strong><br><i>Business on Wheels</i></td>
+            <td><img src="https://oneazimuth.co.in/images/logo.png" alt="Flipped Logo" class="flipped-image"></td>
+        </tr>
+    </table>
+
+
+    <!-- <h5><center>One Azimuth Pricing Calculator</center></h5> -->
+<table>
+    <tr>
+        <th rowspan="2" align="center">1. Choose Product >></th>
+        <th rowspan="2" align="center">2. Select Size >></th>
+        <th rowspan="2" align="center">3. Customize Interior Components >></th>
+        <th rowspan="2" align="center">4. Pick AddOns >></th>
+        <th rowspan="2" align="center">5. Cost Is ₹</th>
+    </tr>
+    <tr></tr>
+    <tr>
+        <td>
+            <div class="card" onclick="selectCard('Truck')">Food Truck<br>
+            <img src="https://oneazimuth.co.in/images/product/food-truck.jpg" style="width: 220px; height: 150px;" alt="Truck Image" style="width: 100px; height: 100px;">
+            </div>
+            <div class="card" onclick="selectCard('KIOSK')">KIOSK<br>
+                <img src="https://oneazimuth.co.in/images/product/beverage-kiosks.jpg" style="width: 220px; height: 150px;" alt="Truck Image" style="width: 100px; height: 100px;">
+            </div>
+            <div class="card" onclick="selectCard('Trailer')">Food Trailer
+                <img src="https://oneazimuth.co.in/images/product/food-trailers1.jpg" style="width: 220px; height: 150px;" alt="Truck Image" style="width: 100px; height: 100px;">
+            </div>
+        </td>
+        
+        <td>
+            <div id="size-dropdown" style="width: 200px; margin: 0 auto; text-align: center;">
+                <select id="size-select" onchange="calculatePrice()" style="font-size: 18px;">
+                    <option value="" selected disabled>Select Size</option>
+                </select>
+            </div>
+        </td>
+
+        <td>
+            <div id="commercial-equipment">
+                <!-- <h3></h3> -->
+                <!-- checkboxes for commercial equipment -->
+                <label><input type="checkbox" name="commercial-equipment" value="10000" checked> Commercial Burners
+                <input type="number" min="0" value="1"></label><br>
+                <label><input type="checkbox" name="commercial-equipment" value="1000" checked> Hot Plate
+                <input type="number" min="0" value="1"></label><br>
+                <label><input type="checkbox" name="commercial-equipment" value="5000" checked> Ovens
+                <input type="number" min="0" value="1"></label><br>
+                <label><input type="checkbox" name="commercial-equipment" value="3000" checked> Fryers
+                <input type="number" min="0" value="1"></label><br>
+                <label><input type="checkbox" name="commercial-equipment" value="4500" checked> Under Counter Chiller
+                <input type="number" min="0" value="1"></label><br>
+                <label><input type="checkbox" name="commercial-equipment" value="9000" checked> Deep Freezer
+                <input type="number" min="0" value="1"></label><br>
+                <label><input type="checkbox" name="commercial-equipment" value="2500" checked> Water System
+                <input type="number" min="0" value="1"></label><br>
+            </div>
+        </td>
+        <td>
+            <div id="addons">
+                <!-- <h3>AddOns</h3> -->
+                <!-- checkboxes for addons -->
+                <label><input type="checkbox" name="addons" value="5000"> Coffee Machine
+                <input type="number" min="0" value="1"></label><br><br>
+                <label><input type="checkbox" name="addons" value="10000"> Fridge
+                <input type="number" min="0" value="1"></label><br><br>
+                <label><input type="checkbox" name="addons" value="15000"> Microwave
+                <input type="number" min="0" value="1"></label><br><br>
+                <label><input type="checkbox" name="addons" value="20000"> Spa Stations
+                <input type="number" min="0" value="1"></label><br><br>
+                <label><input type="checkbox" name="addons" value="25000"> Hair Styling Units
+                <input type="number" min="0" value="1"></label><br><br>
+                <label><input type="checkbox" name="addons" value="30000"> Nail Art
+                <input type="number" min="0" value="1"></label><br><br>
+            </div>
+        </td>
+        <td id="basic-cost" style="font-weight: bold;">₹ 0</td>
+    </tr>
+</table>
+
+<script>
+    function initializeCheckboxes() {
+        var commercialCheckboxes = document.getElementsByName("commercial-equipment");
+        var addonCheckboxes = document.getElementsByName("addons");
+
+        // Add event listeners to commercial equipment checkboxes
+        commercialCheckboxes.forEach(function(checkbox) {
+            checkbox.addEventListener("change", calculatePrice);
+        });
+
+        // Add event listeners to commercial equipment quantity inputs
+        var quantityInputs = document.querySelectorAll('input[type="number"]');
+        quantityInputs.forEach(function(input) {
+            input.addEventListener("input", calculatePrice);
+        });
+
+        // Add event listeners to addon checkboxes
+        addonCheckboxes.forEach(function(checkbox) {
+            checkbox.addEventListener("change", calculatePrice);
+        });
+
+        // Add event listeners to addon quantity inputs
+        var quantityInputs = document.querySelectorAll('input[type="number"]');
+        quantityInputs.forEach(function(input) {
+            input.addEventListener("input", calculatePrice);
+        });
+    }
+
+    function selectCard(cardName) {
+        console.log("Selected Card:", cardName);
+        var sizeDropdown = document.getElementById("size-dropdown");
+        sizeDropdown.style.display = "block"; // Show the dropdown
+
+        var sizeSelect = document.getElementById("size-select");
+        sizeSelect.innerHTML = ""; // Clear existing options
+
+        var sizes = [];
+
+        // Populate options based on the selected card
+        switch(cardName) {
+            case "Truck":
+                sizes = ["Small", "Medium", "Large"];
+                break;
+            case "KIOSK":
+                sizes = ["5 Feet", "10 Feet", "15 Feet", "20 Feet"];
+                break;
+            case "Trailer":
+                sizes = ["10 Ft", "20 Ft", "30 Ft", "40 Ft"];
+                break;
+            default:
+                sizes = ["Select Size"];
+        }
+
+        // Add options to the dropdown
+        sizes.forEach(function(size) {
+            var option = document.createElement("option");
+            option.text = size;
+            sizeSelect.add(option);
+        });
+
+        // Calculate price when card is selected
+        calculatePrice();
+    }
+
+    function calculatePrice() {
+        var sizeSelect = document.getElementById("size-select");
+        var selectedSize = sizeSelect.value;
+
+        var basicCost = document.getElementById("basic-cost");
+        var totalCost = 0;
+
+        // Calculate basic cost based on selected size
+        switch(selectedSize) {
+            case "Small":
+                totalCost = 400000;
+                break;
+            case "Medium":
+                totalCost = 500000;
+                break;
+            case "Large":
+                totalCost = 600000;
+                break;
+            case "5 Feet":
+                totalCost = 450000;
+                break;
+            case "10 Feet":
+                totalCost = 500000;
+                break;
+            case "15 Feet":
+                totalCost = 600000;
+                break;
+            case "20 Feet":
+                totalCost = 700000;
+                break;
+            case "10 Ft":
+                totalCost = 800000;
+                break;
+            case "20 Ft":
+                totalCost = 900000;
+                break;
+            case "30 Ft":
+                totalCost = 1000000;
+                break;
+            case "40 Ft":
+                totalCost = 1100000;
+                break;
+            default:
+                totalCost = 500000;
+        }
+
+        // Calculate total cost including commercial equipment
+        var commercialCheckboxes = document.getElementsByName("commercial-equipment");
+        totalCost += calculateCost(commercialCheckboxes);
+
+        // Calculate total cost including addons
+        var addonCheckboxes = document.getElementsByName("addons");
+        totalCost += calculateCost(addonCheckboxes);
+
+        // Format total cost as Indian Rupees
+        var formattedTotalCost = formatAsIndianRupees(totalCost);
+        basicCost.textContent = formattedTotalCost;
+    }
+        function formatAsIndianRupees(amount) {
+        return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(amount);
+        }
+
+
+    function calculateCost(checkboxes) {
+        var cost = 0;
+        for (var i = 0; i < checkboxes.length; i++) {
+            var checkbox = checkboxes[i];
+            var label = checkbox.closest("label");
+            var quantityInput = label ? label.querySelector('input[type="number"]') : null;
+
+            if (quantityInput) {
+                var quantity = parseInt(quantityInput.value);
+                if (!isNaN(quantity) && checkbox.checked) {
+                    cost += parseInt(checkbox.value) * quantity;
+                }
+            }
+        }
+        return cost;
+    }
+
+    // Initialize checkboxes and add event listeners
+    initializeCheckboxes();
+</script>
+
+<!-- Add intro.js script -->
+<script src="https://cdn.jsdelivr.net/npm/intro.js/minified/intro.min.js"></script>
+<script>
+    // Start intro.js walkthrough
+    function startWalkthrough() {
+        introJs().setOptions({
+            steps: [
+                {
+                    intro: "Welcome to the One Azimuth Pricing Calculator!"
+                },
+                {
+                    element: document.querySelector(".card"),
+                    intro: "Choose a product by clicking on one of these cards.",
+                    position: "right"
+                },
+                {
+                    element: document.getElementById("size-dropdown"),
+                    intro: "Select the size for your chosen product from the dropdown.",
+                    position: "right"
+                },
+                {
+                    element: document.getElementById("commercial-equipment"),
+                    intro: "Customize interior components by checking the desired options.",
+                    position: "right"
+                },
+                {
+                    element: document.getElementById("addons"),
+                    intro: "Pick additional addons by checking the checkboxes.",
+                    position: "right"
+                },
+                {
+                    element: document.getElementById("basic-cost"),
+                    intro: "Here is the total cost of your configured product.",
+                    position: "right"
+                }
+            ]
+        }).start();
+    }
+
+    // Call the function to start the walkthrough
+    startWalkthrough();
+</script>
+
+</body>
+</html>
